@@ -1,10 +1,12 @@
-import React from 'react';
+import Navbar from '../components/Navbar';
 
 const AboutUs = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-50 to-green-100">
+      <Navbar theme='light' cartItems={3} isSignedIn={true} />
+      
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-green-600 to-green-800 text-white py-20 px-4">
+      <div className="bg-gradient-to-r mt-10 from-green-600 to-green-800 text-white py-20 px-4">
         <div className="max-w-6xl mx-auto text-center">
           <h1 className="text-5xl font-bold mb-6">Welcome to FarmLand</h1>
           <p className="text-xl mb-8">Cultivating Tomorrow, Harvesting Today</p>

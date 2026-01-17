@@ -1,4 +1,3 @@
-import React from 'react';
 
 const Footer = () => {
   return (
@@ -9,7 +8,7 @@ const Footer = () => {
           {/* Company Info */}
           <div>
             <h2 className="text-3xl font-bold mb-4" style={{ fontFamily: 'cursive' }}>
-              Farm & Me
+              FarmLand
             </h2>
             <p className="text-gray-400 mb-2">San Francisco Bay</p>
             <p className="text-gray-400 mb-2">Call us daily 8am-8pm</p>
@@ -28,9 +27,9 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Farm & Me Links */}
+          {/* FarmLand Links */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">FARM & ME</h3>
+            <h3 className="text-lg font-semibold mb-4">FarmLand</h3>
             <ul className="space-y-2">
               <li><a href="#" className="text-gray-400 hover:text-white transition">About Us</a></li>
               <li><a href="#" className="text-gray-400 hover:text-white transition">Social Impact</a></li>
@@ -72,7 +71,7 @@ const Footer = () => {
 
         {/* Footer Bottom */}
         <div className="pt-8 border-t border-gray-800 text-center text-gray-500 text-sm">
-          <p>©2020 Farm & Me | All Rights Reserved | Privacy Policy | Terms of use</p>
+          <p>©2026 FarmLand | All Rights Reserved | Privacy Policy | Terms of use</p>
         </div>
       </div>
     </footer>

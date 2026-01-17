@@ -1,24 +1,13 @@
 import './App.css'
-import HomeWelcome from './sections/HomeWelcome'
-import AboutUs from './pages/AboutUs'
-import SocialImpact from './pages/SocialImpace'
-import ChooseCategories from './sections/ChooseCategories'
-import Testimonial from './sections/Testimonial'
-import HomepageEnding from './sections/HomepageEnding'
-import Footer from './sections/Footer'
+import ItemCard from './components/ItemCard'
+
 
 function App() {
 
   return (
     <>
       <div>
-      <HomeWelcome/>
-    {/* <AboutUs/> */}
-    {/* <SocialImpact/> */}
-<ChooseCategories/>
-<Testimonial/>
-<HomepageEnding/>
-<Footer/>
+ <ItemCard imageUrl='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR8ukjVNIA7EUyG-zaC28SffS3o3l8W46r7pnTwf3PzlLWSD4GUtYG_eyD7fS8TjDh9wE5cQmOBoRH71tNAsanpYS1Nn2BZjuC83zNxp-I&s=10' price={120} title='Eggs (pack of 12)'/>
 
 
 

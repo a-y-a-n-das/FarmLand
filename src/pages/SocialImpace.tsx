@@ -1,8 +1,12 @@
 import { Leaf, Heart, Users, Sprout, Globe, Sun } from 'lucide-react';
+import Navbar from '../components/Navbar';
 
 const SocialImpact = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-50 via-lime-50 to-emerald-50">
+
+    <Navbar theme="dark" cartItems={3} isSignedIn={true} />
+
       {/* Hero Section */}
       <section className="relative py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-green-100 to-lime-100">
         <div className="max-w-7xl mx-auto text-center">
