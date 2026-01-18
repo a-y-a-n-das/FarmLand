@@ -1,4 +1,5 @@
 import Navbar from '../components/Navbar';
+import Footer from '../sections/Footer';
 
 const AboutUs = () => {
   return (
@@ -102,7 +103,10 @@ const AboutUs = () => {
             Contact Us
           </button>
         </div>
+
+        
       </div>
+      <Footer />
     </div>
   );
 };

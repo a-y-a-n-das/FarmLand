@@ -4,6 +4,7 @@ import Navbar from '../components/Navbar';
 import { Package, Calendar, CheckCircle, Clock, ChevronDown, ChevronUp, LogOut } from 'lucide-react';
 import { useState } from 'react';
 import { CartItemsAtom } from '../atoms/CartItemsAtom';
+import Footer from '../sections/Footer';
 
 function OrderHistory() {
   const orders = useRecoilValue(OrderHistoryAtom);
@@ -197,6 +198,7 @@ function OrderHistory() {
           </div>
         )}
       </div>
+      <Footer />
     </div>
   );
 }

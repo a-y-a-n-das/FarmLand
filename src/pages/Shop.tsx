@@ -3,6 +3,7 @@ import Navbar from "../components/Navbar";
 import SearchBar from "../components/SearchBar";
 import ItemsSection from "../sections/ItemsSection";
 import { CartItemsAtom } from "../atoms/CartItemsAtom";
+import Footer from "../sections/Footer";
 
 function Shop() {
     const cartItems = useRecoilValue(CartItemsAtom);
@@ -24,7 +25,7 @@ function Shop() {
             <ItemsSection   />      
       </div>
 
-
+    <Footer />
     </div>
   );
 }
