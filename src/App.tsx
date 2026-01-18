@@ -1,18 +1,33 @@
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './App.css'
-import ItemCard from './components/ItemCard'
+import Shop from './pages/Shop'
+import Cart from './pages/Cart';
+import OrderHistory from './pages/OrderHistory';
+import OrderComplete from './pages/OrderComplete';
+import HomePage from './pages/HomePage';
+import ContactUs from './pages/ContactUs';
+import AboutUs from './pages/AboutUs';
+import Signin from './pages/Signin';
 
 
 function App() {
 
   return (
     <>
-      <div>
- <ItemCard imageUrl='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR8ukjVNIA7EUyG-zaC28SffS3o3l8W46r7pnTwf3PzlLWSD4GUtYG_eyD7fS8TjDh9wE5cQmOBoRH71tNAsanpYS1Nn2BZjuC83zNxp-I&s=10' price={120} title='Eggs (pack of 12)'/>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/shop" element={<Shop />} />
+            <Route path="/order-history" element={<OrderHistory />} />
+            <Route path="/contact" element={<ContactUs />} />
+            <Route path="/order-complete" element={<OrderComplete />} />
+            <Route path='/about' element={<AboutUs />} />
+            <Route path='/signin' element={<Signin />} />
+          </Routes>
+        </BrowserRouter>
 
 
-
-
-      </div>
 
     </>
   )

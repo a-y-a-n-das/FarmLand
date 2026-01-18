@@ -1,3 +1,5 @@
+import { useRecoilValue } from "recoil";
+import { CartItemsAtom } from "../atoms/CartItemsAtom";
 import Navbar from "../components/Navbar";
 import ChooseCategories from "../sections/ChooseCategories";
 import Footer from "../sections/Footer";
@@ -6,9 +8,11 @@ import HomeWelcome from "../sections/HomeWelcome";
 import Testimonial from "../sections/Testimonial";
 
 function HomePage() {
+    const cartItems = useRecoilValue(CartItemsAtom);
+
   return (
     <div>
-      <Navbar theme="light" cartItems={3} isSignedIn={true} />
+      <Navbar theme="light" cartItems={cartItems.quantity} isSignedIn={true} />
       <HomeWelcome />
       <ChooseCategories />
       <HomepageEnding />

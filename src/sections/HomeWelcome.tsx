@@ -1,4 +1,7 @@
+import { useNavigate } from "react-router-dom";
+
 function HomeWelcome() {
+  const navigate = useNavigate();
   return (
     <section className="bg-[url('./assets/homepagebg.jpg')] bg-cover bg-center h-screen w-full flex flex-col  items-center text-center px-4">
       <div className="flex flex-col   text-center mt-40">
@@ -14,7 +17,8 @@ function HomeWelcome() {
 
         <button
           type="button"
-          className="mx-auto mt-4 w-40 text-white bg-green-600 box-border border border-transparent hover:bg-green-700 focus:ring-4 focus:ring-green-300 shadow-xs font-medium leading-5 rounded-full text-sm px-4 py-2.5 focus:outline-none"
+          className="mx-auto mt-4 w-40 text-white bg-green-600 box-border border border-transparent hover:bg-green-700 focus:ring-4 focus:ring-green-300 shadow-xs font-medium cursor-pointer  leading-5 rounded-full text-sm px-4 py-2.5 focus:outline-none"
+          onClick={()=>{navigate("/shop")}}
         >
           Shop Now
         </button>

@@ -3,7 +3,7 @@ import Navbar from '../components/Navbar';
 const AboutUs = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-50 to-green-100">
-      <Navbar theme='light' cartItems={3} isSignedIn={true} />
+      <Navbar theme='default' cartItems={3} isSignedIn={true} />
       
       {/* Hero Section */}
       <div className="bg-gradient-to-r mt-10 from-green-600 to-green-800 text-white py-20 px-4">

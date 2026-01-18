@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import logo from '../assets/farmlandLogo.svg';
 import { useState, useEffect } from 'react';
 
@@ -12,6 +13,8 @@ function Navbar(props: props) {
   const cartItems = props.cartItems || 0;
   const isSignIn = props.isSignedIn || false;
   const scroll = window.scrollY;
+  const navigate = useNavigate();
+
   
   useEffect(() => {
     const handleScroll = () => {
@@ -33,7 +36,7 @@ function Navbar(props: props) {
     <div>
       <nav
         className={`fixed top-0 left-0 w-full h-18 pt-2 px-4 flex justify-between items-center transition-all duration-300 ${
-          isScrolled 
+          isScrolled || props.theme === "default"
             ? "bg-white text-black shadow-md" 
             : `bg-transparent ${props.theme === "light" ? "text-white" : "text-gray-800"}`
         } z-50`}
@@ -43,7 +46,8 @@ function Navbar(props: props) {
           <img
             src={logo}
             alt="Farm & Me Logo"
-            className="h-40 w-auto"
+            className="h-40 w-auto cursor-pointer"
+            onClick={() => {navigate("/")}}
             />
         </div>
 
@@ -52,28 +56,28 @@ function Navbar(props: props) {
           <div className='col-span-2'></div>
         <ul className="flex space-x-8 text-lg font-medium">
           <li>
-            <a href="#" className="hover:underline transition">
+            <a href="/" className="hover:underline transition">
               Home
             </a>
           </li>
           <li>
-            <a href="#" className="hover:underline transition">
+            <a href="/shop" className="hover:underline transition">
               Shop
             </a>
           </li>
           <li>
-            <a href="#" className="hover:underline transition">
+            <a href="/about" className="hover:underline transition">
               About Us
             </a>
           </li>
           <li>
-            <a href="#" className="hover:underline transition">
+            <a href="/contact" className="hover:underline transition">
               Contact
             </a>
           </li>
         </ul>
         <div className='flex items-center' >
-          <button className="relative mt-1 p-2 hover:opacity-80 transition cursor-pointer">
+          <button className="relative mt-1 p-2 hover:opacity-80 transition cursor-pointer" onClick={()=>{navigate("/cart")}}>
             {/* Shopping Cart Icon */}
             <svg 
               xmlns="http://www.w3.org/2000/svg" 
@@ -97,7 +101,7 @@ function Navbar(props: props) {
             )}
           </button>
           <div>
-          <button className="ml-4  px-4 py-2 bg-green-600 text-white rounded-full hover:bg-green-700 transition">
+          <button className="ml-4  px-4 py-2 bg-green-600 text-white rounded-full hover:bg-green-700 transition" onClick={()=>(isSignIn? navigate('/order-history'): navigate('/signin'))}>
             {isSignIn ? "Account" : "Sign In"}
           </button>
           </div>

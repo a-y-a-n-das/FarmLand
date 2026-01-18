@@ -2,6 +2,8 @@ interface ItemProps {
   imageUrl: string;
   title: string;
   price: number;
+  rating?: number;
+  inStock?: boolean;
   quantity?: number;
   onAddToCart?: () => void;
   onIncreaseQuantity?: () => void;
@@ -9,7 +11,7 @@ interface ItemProps {
 }
 
 function ItemCard(props: ItemProps) {
-  const { imageUrl, title, price, quantity = 0, onAddToCart, onIncreaseQuantity, onDecreaseQuantity } = props;
+  const { imageUrl, title, price, rating = 0, inStock = true, quantity = 0, onAddToCart, onIncreaseQuantity, onDecreaseQuantity } = props;
 
   return (
     <div className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden group cursor-pointer border border-gray-100">
@@ -18,18 +20,50 @@ function ItemCard(props: ItemProps) {
         <img 
           src={imageUrl} 
           alt={title} 
-          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+          className="block w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+          style={{ display: 'block' }}
         />
-        {/* Quick View Overlay */}
-        <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-300"></div>
+       
+        
+        {/* Stock Badge */}
+        {!inStock && (
+          <div className="absolute top-3 right-3 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-md z-20">
+            Out of Stock
+          </div>
+        )}
+        {inStock && (
+          <div className="absolute top-3 right-3 bg-green-500 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-md z-20">
+            In Stock
+          </div>
+        )}
       </div>
       
       {/* Content Container */}
       <div className="p-5">
         {/* Title */}
-        <h3 className="text-lg font-semibold text-gray-800 mb-2 line-clamp-2 min-h-[3.5rem]">
+        <h3 className="text-lg flex font-semibold text-gray-800 mb-1 line-clamp-1 min-h-[3.5rem]">
           {title}
         </h3>
+        
+        {/* Rating */}
+        <div className="flex items-center gap-1 mb-1">
+          {[1, 2, 3, 4, 5].map((star) => (
+            <svg
+              key={star}
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill={star <= rating ? "#fbbf24" : "#e5e7eb"}
+              className="w-5 h-5"
+            >
+              <path
+                fillRule="evenodd"
+                d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z"
+                clipRule="evenodd"
+              />
+            </svg>
+          ))}
+          <span className="text-sm text-gray-600 ml-1">({rating.toFixed(1)})</span>
+        </div>
         
         {/* Price and Button Container */}
         <div className="flex items-center justify-between mt-4">
@@ -44,7 +78,14 @@ function ItemCard(props: ItemProps) {
           {quantity === 0 ? (
             <button 
               onClick={onAddToCart}
-              className="bg-green-600 hover:bg-green-700 text-white px-5 py-2.5 rounded-full font-medium transition-all duration-300 hover:scale-105 active:scale-95 shadow-sm hover:shadow-md flex items-center gap-2"
+              disabled={!inStock}
+              className={`${
+                inStock 
+                  ? 'bg-green-600 hover:bg-green-700' 
+                  : 'bg-gray-400 cursor-not-allowed'
+              } text-white px-5 py-2.5 rounded-full font-medium transition-all duration-300 ${
+                inStock ? 'hover:scale-105 active:scale-95' : ''
+              } shadow-sm hover:shadow-md flex items-center gap-2`}
             >
               <svg 
                 xmlns="http://www.w3.org/2000/svg" 
