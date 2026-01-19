@@ -7,12 +7,37 @@ import HomepageEnding from "../sections/HomepageEnding";
 import HomeWelcome from "../sections/HomeWelcome";
 import Testimonial from "../sections/Testimonial";
 
+import axios from "axios";
+import { useEffect, useState } from "react";
+
 function HomePage() {
-    const cartItems = useRecoilValue(CartItemsAtom);
+  const [cartItems, setCartItems] = useState(useRecoilValue(CartItemsAtom));
+  const [isSignedIn, setIsSignedIn] = useState(false);
+  useEffect(() => {
+    const getUser = async () => {
+      try {
+        const response = await axios.get("/user/getuser", {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        });
+        if (response.status === 200) {
+          setIsSignedIn(true);
+          setCartItems(response.data.user?.cartItems.length);
+        }
+      } catch (error) {
+        console.log(error);
+        setIsSignedIn(false);
+      }
+    };
+    getUser();
+    
+  }, [setIsSignedIn]);
 
   return (
     <div>
-      <Navbar theme="light" cartItems={cartItems.quantity} isSignedIn={true} />
+      <Navbar theme="light" cartItems={cartItems.quantity} isSignedIn={isSignedIn} />
       <HomeWelcome />
       <ChooseCategories />
       <HomepageEnding />
