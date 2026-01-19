@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Mail, Lock, Eye, EyeOff, Leaf } from 'lucide-react';
+import axios from 'axios';
 
 function Signin() {
   const [email, setEmail] = useState('');
@@ -13,6 +14,28 @@ function Signin() {
     
     // Handle email/password authentication
     console.log('Signing in with:', { email, password });
+
+    try{
+
+      
+    const response  = await axios.post('/token', {
+      email,
+      password,
+    });
+
+    if(response.status === 200 || response.status === 201){
+      localStorage.setItem('token', response.data.token);
+      window.location.href = '/shop';
+    } else {
+      // Handle error (e.g., show error message)
+      console.error('Sign in failed');
+      setIsLoading(false);
+
+    }   
+  } catch (error) {
+      console.error('An error occurred during sign in:', error);
+      setIsLoading(false);
+    }
     
     // Simulate API call
     setTimeout(() => {

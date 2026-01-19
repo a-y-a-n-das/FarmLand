@@ -9,7 +9,12 @@ import { publicRoutes } from "./routes/publicRoutes.ts";
 const app = express()
 const PORT:number = Number(process.env.PORT) || 3000;
 
-app.use(cors())
+app.use(cors({
+    origin: 'http://localhost:5173',
+    credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
+}))
 app.use(express.json())
 
 app.use("/api/user", auth, userRoutes)

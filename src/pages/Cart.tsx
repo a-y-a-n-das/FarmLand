@@ -1,24 +1,23 @@
 import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import { CartItemsAtom } from '../atoms/CartItemsAtom';
-import ItemsListAtom, { type Item } from '../atoms/ItemsListAtom';
+import { CartAtom, CartItemCountAtom } from '../atoms/UserAtom';
 import Navbar from '../components/Navbar';
 import { Trash2, Plus, Minus, ShoppingBag, ArrowRight } from 'lucide-react';
+import { SignInAtom } from '../atoms/UserAtom';
+import type { Item } from '../sections/ItemsSection';
 
 function Cart() {
-  const cartItems = useRecoilValue(CartItemsAtom);
-  const allItems = useRecoilValue(ItemsListAtom);
+  const cartItemCount = Number(useRecoilValue(CartItemCountAtom));
   const [promoCode, setPromoCode] = useState('');
+  const isSignedIn = useRecoilValue(SignInAtom);
+  const cartItems = useRecoilValue(CartAtom);
   
 
   // Get cart items with their details
-  const cartItemsWithDetails = cartItems.itemId.map((id) => {
-    const item = allItems.find((item) => item.id === id);
-    return item;
-  }).filter((item): item is Item => item !== undefined);
+  const cartItemsWithDetails: Item[] = cartItems.filter((item: Item) => item !== undefined);
 
   // Calculate totals
-  const subtotal = cartItemsWithDetails.reduce((sum, item) => sum + item.price, 0);
+  const subtotal = cartItemsWithDetails.reduce((acc, item) => acc + item.price * item.quantity, 0);
   const tax = subtotal * 0.1; // 10% tax
   const shipping = subtotal > 50 ? 0 : 5.99;
   const total = subtotal + tax + shipping;
@@ -45,7 +44,7 @@ function Cart() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navbar theme="default" cartItems={cartItems.quantity} />
+      <Navbar theme="default" cartItems={cartItemCount} isSignedIn={isSignedIn} />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
@@ -54,7 +53,7 @@ function Cart() {
             <ShoppingBag className="text-green-600" size={36} />
             Shopping Cart
           </h1>
-          <p className="text-gray-600 mt-2">{cartItems.quantity} items in your cart</p>
+          <p className="text-gray-600 mt-2">{cartItems.length} items in your cart</p>
         </div>
 
         {cartItemsWithDetails.length === 0 ? (

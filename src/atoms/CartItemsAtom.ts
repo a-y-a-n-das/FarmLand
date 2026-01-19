@@ -5,7 +5,7 @@ export interface CartItems {
     itemId: number[],
 }
 
-export const CartItemsAtom = atom<CartItems>({
+export const CartItemAtom = atom<CartItems>({
   key: "CartItemsAtom",
   default: {
     quantity: 0,

@@ -1,7 +1,11 @@
+import { addItemToCartInDb } from "../database/addItemToCart.ts";
 import { createOrderInDb } from "../database/createOrder.ts";
 import { getCartItemsFromDb } from "../database/getCartItems.ts";
+import { getUser } from "../database/getUser.ts";
 import { getOrderHistoryFromDb } from "../database/orderHistory.ts";
 import type { Request, Response } from "express";
+import { incrementQuantityCartInDb } from "../database/incrementQuantityCart.ts.ts";
+import { decrementQuantityInCartInDb } from "../database/decrementQuantityInCart.ts";
 
 export const getCartItems = async (req: Request, res: Response) => {
   const userId = req.userId!; 
@@ -38,3 +42,66 @@ export const createOrder = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Error creating order", error });
   }
 };
+
+export const getUserProfile = async (req: Request, res: Response) => {
+  const userId = req.userId!; 
+
+  try {
+    const user = await getUser(userId);
+    res.status(200).json({ user });
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching user profile", error });
+  }
+};
+
+export const addItemToCart = async (req: Request, res: Response) => {
+    const userId = req.userId!; 
+    const { itemId, quantity } = req.body as { itemId: number; quantity: number };
+    
+    try {
+        const cartItem = await addItemToCartInDb(userId, itemId, quantity);
+        if (!cartItem) {
+            return res.status(404).json({ message: "Item not found" });
+        }
+        res.status(200).json({ message: "Item added to cart", cartItem });
+    } catch (error) {
+        return res.status(500).json({ message: "Error adding item to cart", error });
+    }
+};
+
+export const incrementQuantityCart = async (req: Request, res: Response) => {
+    const userId = req.userId!; 
+    const { itemId, quantity } = req.body as { itemId: number; quantity: number };
+    
+    try {
+        const cartItem = await incrementQuantityCartInDb(userId, itemId, quantity);
+        if (!cartItem) {
+            return res.status(404).json({ message: "Item not found" });
+        }
+        res.status(200).json({ message: "Item quantity incremented in cart", cartItem });
+    } catch (error) {
+        return res.status(500).json({ message: "Error incrementing item quantity in cart", error });
+
+    }
+};
+
+
+
+export const decrementQuantityCart = async (req: Request, res: Response) => {
+    const userId = req.userId!; 
+    const { itemId, quantity } = req.body as { itemId: number; quantity: number };
+    
+    try {
+        const cartItem = await decrementQuantityInCartInDb(userId, itemId, quantity);
+        if (!cartItem) {
+            return res.status(404).json({ message: "Item not found" });
+        }
+        res.status(200).json({ message: "Item quantity decremented in cart", cartItem });
+    } catch (error) {
+        return res.status(500).json({ message: "Error decrementing item quantity in cart", error });
+
+    }
+};
+
+
+

@@ -1,8 +1,12 @@
 import  { type Response, type NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import type { UserRequest } from "../types/request.ts";
+import type { Request } from "express";
 
+interface UserRequest extends Request {
+    userId?: number;
+}
 
+const SECRET: string = process.env.SECRET || "your_jwt_secret_key";
 
 export async function auth(req: UserRequest, res:Response, next:NextFunction): Promise<void> {
     const token = req.header("Authorization")?.split(" ")[1];
@@ -12,7 +16,7 @@ export async function auth(req: UserRequest, res:Response, next:NextFunction): P
     }
 
     try {
-        const decoded = jwt.verify(token, process.env.SECRET as string) as { userId: number };
+        const decoded = jwt.verify(token, SECRET) as { userId: number };
         if(!decoded || !decoded.userId){
             res.status(401).json({ message: "Token is not valid" });
             return;

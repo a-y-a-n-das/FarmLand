@@ -2,8 +2,12 @@ import React, { useState } from 'react';
 import { Leaf, MapPin, Phone, Mail, Send } from 'lucide-react';
 import Footer from '../sections/Footer';
 import Navbar from '../components/Navbar';
+import { useRecoilValue } from 'recoil';
+import { CartItemCountAtom, SignInAtom } from '../atoms/UserAtom';
 
 const ContactUs = () => {
+  const cartItems = Number(useRecoilValue(CartItemCountAtom));
+  const isSignedIn = useRecoilValue(SignInAtom);  
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -29,7 +33,7 @@ const ContactUs = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-50 to-white">
-        <Navbar theme='dark' />
+        <Navbar theme='dark' isSignedIn={isSignedIn} cartItems={cartItems} />
       {/* Header Section */}
       <div className="bg-green-600 mt-18 text-white py-16 px-4">
         <div className="max-w-6xl mx-auto text-center">

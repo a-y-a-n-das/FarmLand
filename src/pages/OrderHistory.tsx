@@ -3,13 +3,14 @@ import { OrderHistoryAtom, type Order } from '../atoms/OrderHistoryAtom';
 import Navbar from '../components/Navbar';
 import { Package, Calendar, CheckCircle, Clock, ChevronDown, ChevronUp, LogOut } from 'lucide-react';
 import { useState } from 'react';
-import { CartItemsAtom } from '../atoms/CartItemsAtom';
 import Footer from '../sections/Footer';
+import { CartItemCountAtom, SignInAtom } from '../atoms/UserAtom';
 
 function OrderHistory() {
   const orders = useRecoilValue(OrderHistoryAtom);
   const [expandedOrders, setExpandedOrders] = useState<number[]>([]);
-    const cartItems = useRecoilValue(CartItemsAtom);
+    const cartItemCount = Number(useRecoilValue(CartItemCountAtom));
+    const isSignedIn = useRecoilValue(SignInAtom);
 
 
   const toggleOrderExpansion = (orderId: number) => {
@@ -39,7 +40,7 @@ function OrderHistory() {
 
   return (
     <div className="min-h-screen bg-gray-50 pt-20">
-      <Navbar theme="default" cartItems={cartItems.quantity} />
+      <Navbar theme="default" cartItems={cartItemCount} isSignedIn={isSignedIn} />
       
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
