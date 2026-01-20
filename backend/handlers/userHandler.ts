@@ -33,12 +33,14 @@ export const getOrderHistory = async (req: Request, res: Response) => {
 
 export const createOrder = async (req: Request, res: Response) => {
   const userId = req.userId!; 
-  const { itemId, quantity, price } = req.body as { itemId: number; quantity: number; price: number };
+  const { itemId, quantity, price } = req.body as { itemId: number[]; quantity: number[]; price: number[] };
+
 
   try {
     const order = await createOrderInDb(userId, itemId, quantity, price);
     res.status(201).json({ message: "Order created successfully", order });
   } catch (error) {
+    console.error('Order creation error:', error);
     res.status(500).json({ message: "Error creating order", error });
   }
 };

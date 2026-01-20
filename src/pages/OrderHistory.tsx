@@ -4,12 +4,12 @@ import Navbar from '../components/Navbar';
 import { Package, Calendar, CheckCircle, Clock, ChevronDown, ChevronUp, LogOut } from 'lucide-react';
 import { useState } from 'react';
 import Footer from '../sections/Footer';
-import { CartItemCountAtom, SignInAtom } from '../atoms/UserAtom';
+import { CartAtom, SignInAtom } from '../atoms/UserAtom';
 
 function OrderHistory() {
   const orders = useRecoilValue(OrderHistoryAtom);
   const [expandedOrders, setExpandedOrders] = useState<number[]>([]);
-    const cartItemCount = Number(useRecoilValue(CartItemCountAtom));
+    const cartItemCount = useRecoilValue(CartAtom).length
     const isSignedIn = useRecoilValue(SignInAtom);
 
 
@@ -33,9 +33,8 @@ function OrderHistory() {
   const isExpanded = (orderId: number) => expandedOrders.includes(orderId);
 
   const handleLogout = () => {
-    // Handle logout logic
-    console.log('Logout clicked');
-    // You can add: clear auth tokens, redirect to login, etc.
+    localStorage.removeItem("token");
+    window.location.href = "/";
   };
 
   return (

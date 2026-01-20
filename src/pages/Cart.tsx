@@ -1,129 +1,181 @@
-import { useState, useMemo } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { CartAtom, CartItemCountAtom } from '../atoms/UserAtom';
-import Navbar from '../components/Navbar';
-import { Trash2, Plus, Minus, ShoppingBag, ArrowRight } from 'lucide-react';
-import { SignInAtom } from '../atoms/UserAtom';
-import axios from 'axios';
-import type { Item } from '../sections/ItemsSection';
+import { useState, useMemo } from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { CartAtom, CartItemCountAtom } from "../atoms/UserAtom";
+import Navbar from "../components/Navbar";
+import { Trash2, Plus, Minus, ShoppingBag, ArrowRight } from "lucide-react";
+import { SignInAtom } from "../atoms/UserAtom";
+import axios from "axios";
+import type { Item } from "../sections/ItemsSection";
 
 interface CartItem {
-    id: number;
-    name: string;
-    price: number;
-    unit: string;
-    image: string;
-    category: string;
-    description: string;
-    inStock: boolean;
-    rating: number;
-    quantity: number;
-    item: Item;
+  id: number;
+  name: string;
+  price: number;
+  unit: string;
+  image: string;
+  category: string;
+  description: string;
+  inStock: boolean;
+  rating: number;
+  quantity: number;
+  item: Item;
 }
 
 function Cart() {
   const cartItemCount = Number(useRecoilValue(CartItemCountAtom));
-  const [promoCode, setPromoCode] = useState('');
+  const [promoCode, setPromoCode] = useState("");
   const isSignedIn = useRecoilValue(SignInAtom);
   const [cartItems, setCartItems] = useRecoilState(CartAtom);
-  
+
   // Get cart items with their details
-  const cartItemsWithDetails: CartItem[] = useMemo(() => 
-    (cartItems as CartItem[]).filter((item) => item.quantity > 0),
-    [cartItems]
+  const cartItemsWithDetails: CartItem[] = useMemo(
+    () => (cartItems as CartItem[]).filter((item) => item.quantity > 0),
+    [cartItems],
   );
 
   // Calculate totals
-  const subtotal = cartItemsWithDetails.reduce((acc, i) => acc + i.item.price * i.quantity, 0);
+  const subtotal = cartItemsWithDetails.reduce(
+    (acc, i) => acc + i.item.price * i.quantity,
+    0,
+  );
   const tax = subtotal * 0.1; // 10% tax
   const shipping = subtotal > 50 ? 0 : 5.99;
   const total = subtotal + tax + shipping;
 
-  const handleRemoveItem = (itemId: number) => {
-    // This would update the Recoil state
+  const handleRemoveItem = (itemId: number, quantity: number) => {
+    const decreaseQuantity = async (itemId: number, quantity: number) => {
+      const token = localStorage.getItem("token");
+      await axios.post(
+        "/user/decrementquantity",
+        {
+          itemId: itemId,
+          quantity: quantity,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+    };
+    decreaseQuantity(itemId, quantity);
+
+    setCartItems((prevItems) => {
+      const updatedItems = prevItems.map((item) => {
+        if (item.item?.id === itemId) {
+          return { ...item, quantity: 0 };
+        }
+        return item;
+      });
+      return updatedItems;
+    });
   };
 
   const handleUpdateQuantity = (itemId: number, change: number) => {
-      const increaseQuantity = async (itemId: number,) => {
-      const token = localStorage.getItem('token');
-      const response = await axios.post('/user/incrementquantity',
+    const increaseQuantity = async (itemId: number) => {
+      const token = localStorage.getItem("token");
+      await axios.post(
+        "/user/incrementquantity",
         {
           itemId: itemId,
           quantity: 1,
         },
         {
           headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-          }
-        });
-
-      if(response.status === 200){
-        setCartItems((prevItems) => {
-          const updatedItems = prevItems.map((item) => {
-            if(item.id === itemId){
-              return {...item, quantity: item.quantity + 1};
-            }
-            return item;
-          });
-          return updatedItems;
-        });
-      } 
-
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
     };
 
-     const decreaseQuantity = async (itemId: number) => {
-      const token = localStorage.getItem('token');
-      const response = await axios.post('/user/decrementquantity',
+    const decreaseQuantity = async (itemId: number) => {
+      const token = localStorage.getItem("token");
+      await axios.post(
+        "/user/decrementquantity",
         {
           itemId: itemId,
           quantity: 1,
         },
         {
           headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-          }
-        });
-
-       if(response.status === 200){
-        setCartItems((prevItems) => {
-          const updatedItems = prevItems.map((item) => {
-            if(item.item?.id === itemId){
-              return {...item, quantity:   item.quantity - 1};
-            }
-            return item;
-          });
-          return updatedItems;
-        });
-      } 
-
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+      
     };
 
-    
-
-    if(change > 0){
+    if (change > 0) {
       increaseQuantity(itemId);
-    }
-    else if (change < 0){
+        setCartItems((prevItems) => {
+          const updatedItems = prevItems.map((item) => {
+            if (item.item?.id === itemId) {
+              return { ...item, quantity: item.quantity + 1};
+            }
+            return item;
+          });
+          return updatedItems;
+        });
+      
+      
+    } else if (change < 0) {
       decreaseQuantity(itemId);
+        setCartItems((prevItems) => {
+          const updatedItems = prevItems.map((item) => {
+            if (item.item?.id === itemId) {
+              return { ...item, quantity: item.quantity - 1 };
+            }
+            return item;
+          });
+          return updatedItems;
+        });
+      
     }
   };
 
   const handleCheckout = () => {
-    // Handle checkout logic
-    console.log('Proceed to checkout');
+    const checkout = async () => {
+      const token = localStorage.getItem("token");
+      const itemIds = cartItemsWithDetails.map((i) => i.item.id);
+      const quantities = cartItemsWithDetails.map((i) => i.quantity);
+      const prices = cartItemsWithDetails.map((i) => i.item.price);
+      const response = await axios.post(
+        "/user/order",
+        {
+          itemId: itemIds,
+          quantity: quantities,
+          price: prices,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+      if (response.status === 201) {
+        window.location.href = "/order-complete";
+      }
+    };
+    checkout();
   };
 
   const handleApplyPromo = () => {
     // Handle promo code application
-    console.log('Apply promo:', promoCode);
+    console.log("Apply promo:", promoCode);
   };
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navbar theme="default" cartItems={cartItemCount} isSignedIn={isSignedIn} />
-      
+      <Navbar
+        theme="default"
+        cartItems={cartItemCount}
+        isSignedIn={isSignedIn}
+      />
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
@@ -131,15 +183,21 @@ function Cart() {
             <ShoppingBag className="text-green-600" size={36} />
             Shopping Cart
           </h1>
-          <p className="text-gray-600 mt-2">{cartItems.length} items in your cart</p>
+          <p className="text-gray-600 mt-2">
+            {cartItems.length} items in your cart
+          </p>
         </div>
 
         {cartItemsWithDetails.length === 0 ? (
           // Empty Cart State
           <div className="text-center py-16">
             <ShoppingBag className="mx-auto text-gray-300" size={80} />
-            <h2 className="mt-4 text-2xl font-semibold text-gray-900">Your cart is empty</h2>
-            <p className="mt-2 text-gray-600">Add some fresh products from our farm!</p>
+            <h2 className="mt-4 text-2xl font-semibold text-gray-900">
+              Your cart is empty
+            </h2>
+            <p className="mt-2 text-gray-600">
+              Add some fresh products from our farm!
+            </p>
             <a
               href="/shop"
               className="mt-6 inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-full font-medium transition-all duration-300 hover:scale-105"
@@ -152,12 +210,10 @@ function Cart() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Cart Items */}
             <div className="lg:col-span-2 space-y-4">
-            {
-              cartItemsWithDetails.map((i ) => (
+              {cartItemsWithDetails.map((i) => (
                 <div
-                key={i.item.id}
-                className="bg-white rounded-2xl shadow-md p-6 hover:shadow-lg transition-shadow duration-300"
-                
+                  key={i.item.id}
+                  className="bg-white rounded-2xl shadow-md p-6 hover:shadow-lg transition-shadow duration-300"
                 >
                   <div className="flex gap-6">
                     {/* Item Image */}
@@ -173,15 +229,27 @@ function Cart() {
                     <div className="flex-1">
                       <div className="flex justify-between items-start">
                         <div>
-                          <h3 className="text-lg font-semibold text-gray-900">{i.item.name}</h3>
-                          <p className="text-sm text-gray-600 mt-1">{i.item.description}</p>
+                          <h3 className="text-lg font-semibold text-gray-900">
+                            {i.item.name}
+                          </h3>
+                          <p className="text-sm text-gray-600 mt-1">
+                            {i.item.description}
+                          </p>
                           <div className="flex items-center gap-2 mt-2">
-                            <span className="text-sm text-gray-500">Category:</span>
-                            <span className="text-sm font-medium text-green-700">{(i.item.category)==='f_n_v'? "Fruits and Vegetables" : i.item.category}</span>
+                            <span className="text-sm text-gray-500">
+                              Category:
+                            </span>
+                            <span className="text-sm font-medium text-green-700">
+                              {i.item.category === "f_n_v"
+                                ? "Fruits and Vegetables"
+                                : i.item.category}
+                            </span>
                           </div>
                         </div>
                         <button
-                          onClick={() => handleRemoveItem(i.item.id)}
+                          onClick={() =>
+                            handleRemoveItem(i.item.id, i.quantity)
+                          }
                           className="text-red-500 hover:text-red-700 hover:bg-red-50 p-2 rounded-full transition-all duration-200"
                           aria-label="Remove item"
                         >
@@ -209,8 +277,12 @@ function Cart() {
                           </button>
                         </div>
                         <div className="text-right">
-                          <p className="text-2xl font-bold text-green-700">${(i.item.price * i.quantity).toFixed(2)}</p>
-                          <p className="text-xs text-gray-500">per {i.item.unit}</p>
+                          <p className="text-2xl font-bold text-green-700">
+                            ${(i.item.price * i.quantity).toFixed(2)}
+                          </p>
+                          <p className="text-xs text-gray-500">
+                            per {i.item.unit}
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -222,7 +294,9 @@ function Cart() {
             {/* Order Summary */}
             <div className="lg:col-span-1">
               <div className="bg-white rounded-2xl shadow-md p-6 sticky top-4">
-                <h2 className="text-xl font-bold text-gray-900 mb-6">Order Summary</h2>
+                <h2 className="text-xl font-bold text-gray-900 mb-6">
+                  Order Summary
+                </h2>
 
                 {/* Promo Code */}
                 <div className="mb-6">
@@ -276,7 +350,9 @@ function Cart() {
                 {/* Total */}
                 <div className="flex justify-between items-center border-t-2 border-gray-300 pt-4 mt-4">
                   <span className="text-lg font-bold text-gray-900">Total</span>
-                  <span className="text-2xl font-bold text-green-700">${total.toFixed(2)}</span>
+                  <span className="text-2xl font-bold text-green-700">
+                    ${total.toFixed(2)}
+                  </span>
                 </div>
 
                 {/* Checkout Button */}
