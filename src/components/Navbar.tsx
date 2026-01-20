@@ -1,20 +1,33 @@
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/farmlandLogo.svg";
 import { useState, useEffect } from "react";
+import { useRecoilValue } from "recoil";
+import ItemsListAtom from "../atoms/ItemsListAtom";
 
 interface props {
   theme: string;
-  cartItems: number;
+  cartItems?: number;
   isSignedIn: boolean;
 }
 
 function Navbar(props: props) {
   const [isScrolled, setIsScrolled] = useState(false);
-  const cartItems = props.cartItems || 0 ;
+  
+  const itemsList = useRecoilValue(ItemsListAtom);
+  let cartItems: number = 0
+
+  itemsList.forEach(i=> {
+    const u: number[]= []
+    if(!u.includes(i.id) && i.quantity != 0 ){
+      cartItems+= 1
+      u.push(i.id)
+    }
+  });
+
+
   const isSignIn = props.isSignedIn || false;
   const scroll = window.scrollY;
   const navigate = useNavigate();
-
   useEffect(() => {
     const handleScroll = () => {
       if (scroll > 50) {
@@ -105,7 +118,7 @@ function Navbar(props: props) {
               )}
             </button>
             <div>
-              {isNaN(props.cartItems) ? (
+              {isNaN(cartItems) ? (
                 <div></div>
               ) : (
                 <button

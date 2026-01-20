@@ -16,13 +16,14 @@ export interface Item{
     inStock: boolean;
     rating: number;
     quantity: number;
+    item?: Item;
 }
 
 export default function ItemsSection() {
     const [items, setItems] = useRecoilState(ItemsListAtom);
     const sortBy: string = useRecoilValue(sortByAtom);
     const searchQuery: string = useRecoilValue(searchQueryAtom);
-
+    
     const filteredItems = items.filter((item:Item) =>
         item.name.toLowerCase().includes(searchQuery.toLowerCase())    );
 
@@ -66,7 +67,7 @@ export default function ItemsSection() {
         setItems((prevItems: Item[]) => {
           const updatedItems: Item[] = prevItems.map((item: Item) => {
             if(item.id === itemId){
-
+              console.log("quantity", item.quantity);
               return {...item, quantity: item.quantity + 1};
             }
             return item;

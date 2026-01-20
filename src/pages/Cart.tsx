@@ -1,35 +1,113 @@
-import { useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useState, useMemo } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { CartAtom, CartItemCountAtom } from '../atoms/UserAtom';
 import Navbar from '../components/Navbar';
 import { Trash2, Plus, Minus, ShoppingBag, ArrowRight } from 'lucide-react';
 import { SignInAtom } from '../atoms/UserAtom';
+import axios from 'axios';
 import type { Item } from '../sections/ItemsSection';
+
+interface CartItem {
+    id: number;
+    name: string;
+    price: number;
+    unit: string;
+    image: string;
+    category: string;
+    description: string;
+    inStock: boolean;
+    rating: number;
+    quantity: number;
+    item: Item;
+}
 
 function Cart() {
   const cartItemCount = Number(useRecoilValue(CartItemCountAtom));
   const [promoCode, setPromoCode] = useState('');
   const isSignedIn = useRecoilValue(SignInAtom);
-  const cartItems = useRecoilValue(CartAtom);
+  const [cartItems, setCartItems] = useRecoilState(CartAtom);
   
-
   // Get cart items with their details
-  const cartItemsWithDetails: Item[] = cartItems.filter((item: Item) => item !== undefined);
+  const cartItemsWithDetails: CartItem[] = useMemo(() => 
+    (cartItems as CartItem[]).filter((item) => item.quantity > 0),
+    [cartItems]
+  );
 
   // Calculate totals
-  const subtotal = cartItemsWithDetails.reduce((acc, item) => acc + item.price * item.quantity, 0);
+  const subtotal = cartItemsWithDetails.reduce((acc, i) => acc + i.item.price * i.quantity, 0);
   const tax = subtotal * 0.1; // 10% tax
   const shipping = subtotal > 50 ? 0 : 5.99;
   const total = subtotal + tax + shipping;
 
   const handleRemoveItem = (itemId: number) => {
     // This would update the Recoil state
-    console.log('Remove item:', itemId);
   };
 
   const handleUpdateQuantity = (itemId: number, change: number) => {
-    // This would update the Recoil state
-    console.log('Update quantity:', itemId, change);
+      const increaseQuantity = async (itemId: number,) => {
+      const token = localStorage.getItem('token');
+      const response = await axios.post('/user/incrementquantity',
+        {
+          itemId: itemId,
+          quantity: 1,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          }
+        });
+
+      if(response.status === 200){
+        setCartItems((prevItems) => {
+          const updatedItems = prevItems.map((item) => {
+            if(item.id === itemId){
+              return {...item, quantity: item.quantity + 1};
+            }
+            return item;
+          });
+          return updatedItems;
+        });
+      } 
+
+    };
+
+     const decreaseQuantity = async (itemId: number) => {
+      const token = localStorage.getItem('token');
+      const response = await axios.post('/user/decrementquantity',
+        {
+          itemId: itemId,
+          quantity: 1,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          }
+        });
+
+       if(response.status === 200){
+        setCartItems((prevItems) => {
+          const updatedItems = prevItems.map((item) => {
+            if(item.item?.id === itemId){
+              return {...item, quantity:   item.quantity - 1};
+            }
+            return item;
+          });
+          return updatedItems;
+        });
+      } 
+
+    };
+
+    
+
+    if(change > 0){
+      increaseQuantity(itemId);
+    }
+    else if (change < 0){
+      decreaseQuantity(itemId);
+    }
   };
 
   const handleCheckout = () => {
@@ -74,17 +152,19 @@ function Cart() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Cart Items */}
             <div className="lg:col-span-2 space-y-4">
-              {cartItemsWithDetails.map((item) => (
+            {
+              cartItemsWithDetails.map((i ) => (
                 <div
-                  key={item.id}
-                  className="bg-white rounded-2xl shadow-md p-6 hover:shadow-lg transition-shadow duration-300"
+                key={i.item.id}
+                className="bg-white rounded-2xl shadow-md p-6 hover:shadow-lg transition-shadow duration-300"
+                
                 >
                   <div className="flex gap-6">
                     {/* Item Image */}
                     <div className="flex-shrink-0">
                       <img
-                        src={item.image}
-                        alt={item.name}
+                        src={i.item.image}
+                        alt={i.item.name}
                         className="w-32 h-32 object-cover rounded-xl"
                       />
                     </div>
@@ -93,15 +173,15 @@ function Cart() {
                     <div className="flex-1">
                       <div className="flex justify-between items-start">
                         <div>
-                          <h3 className="text-lg font-semibold text-gray-900">{item.name}</h3>
-                          <p className="text-sm text-gray-600 mt-1">{item.description}</p>
+                          <h3 className="text-lg font-semibold text-gray-900">{i.item.name}</h3>
+                          <p className="text-sm text-gray-600 mt-1">{i.item.description}</p>
                           <div className="flex items-center gap-2 mt-2">
                             <span className="text-sm text-gray-500">Category:</span>
-                            <span className="text-sm font-medium text-green-700">{item.category}</span>
+                            <span className="text-sm font-medium text-green-700">{(i.item.category)==='f_n_v'? "Fruits and Vegetables" : i.item.category}</span>
                           </div>
                         </div>
                         <button
-                          onClick={() => handleRemoveItem(item.id)}
+                          onClick={() => handleRemoveItem(i.item.id)}
                           className="text-red-500 hover:text-red-700 hover:bg-red-50 p-2 rounded-full transition-all duration-200"
                           aria-label="Remove item"
                         >
@@ -113,24 +193,24 @@ function Cart() {
                       <div className="flex justify-between items-center mt-4">
                         <div className="flex items-center gap-3 bg-green-50 rounded-full px-3 py-2 border border-green-200">
                           <button
-                            onClick={() => handleUpdateQuantity(item.id, -1)}
-                            className="w-8 h-8 flex items-center justify-center bg-white hover:bg-green-600 hover:text-white text-green-600 rounded-full transition-all duration-200 shadow-sm"
+                            onClick={() => handleUpdateQuantity(i.item.id, -1)}
+                            className="w-8 h-8 flex items-center cursor-pointer justify-center bg-white hover:bg-green-600 hover:text-white text-green-600 rounded-full transition-all duration-200 shadow-sm"
                           >
                             <Minus size={16} />
                           </button>
                           <span className="text-green-700 font-bold text-lg min-w-[2rem] text-center">
-                            1
+                            {i.quantity}
                           </span>
                           <button
-                            onClick={() => handleUpdateQuantity(item.id, 1)}
-                            className="w-8 h-8 flex items-center justify-center bg-green-600 hover:bg-green-700 text-white rounded-full transition-all duration-200 shadow-sm"
+                            onClick={() => handleUpdateQuantity(i.item.id, 1)}
+                            className="w-8 h-8 flex items-center cursor-pointer justify-center bg-green-600 hover:bg-green-700 text-white rounded-full transition-all duration-200 shadow-sm"
                           >
                             <Plus size={16} />
                           </button>
                         </div>
                         <div className="text-right">
-                          <p className="text-2xl font-bold text-green-700">${item.price.toFixed(2)}</p>
-                          <p className="text-xs text-gray-500">per {item.unit}</p>
+                          <p className="text-2xl font-bold text-green-700">${(i.item.price * i.quantity).toFixed(2)}</p>
+                          <p className="text-xs text-gray-500">per {i.item.unit}</p>
                         </div>
                       </div>
                     </div>

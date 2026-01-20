@@ -1,5 +1,6 @@
 import { atom, selector } from "recoil";
 import axios from "axios";
+import type { Item } from "../sections/ItemsSection";
 
 export const SignInAtom = atom<boolean>({
   key: "SignInAtom",
@@ -11,13 +12,13 @@ export const CartItemCountAtom = atom<number>({
   default: 0,
 });
 
-export const CartAtom = atom<[]>({
+export const CartAtom = atom<Item[]>({
   key: "CartItemsAtom",
   default: selector({
     key: "CartItemsAtom/Default",
     get: () => {
       const fetchCart = async () => {
-        const response = await axios.get("/cart/getcartitems", {
+        const response = await axios.get("/user/cart", {
           headers: {
             "Content-Type": "application/json",
             Authorization: "Bearer " + localStorage.getItem("token"),
