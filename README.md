@@ -74,6 +74,7 @@ Backend runs on `http://localhost:3000`
 ---
 
 Made with ❤️ as a learning project
+```
 import reactDom from 'eslint-plugin-react-dom'
 
 export default defineConfig([
