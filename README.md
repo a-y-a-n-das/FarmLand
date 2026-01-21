@@ -1,53 +1,79 @@
-# React + TypeScript + Vite
+# FarmLand 🌾
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A simple e-commerce webapp where you can buy fresh produce directly from farms. Made this for learning full-stack development with React and Express.
 
-Currently, two official plugins are available:
+## What it does
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Browse different farm products with search and filters
+- Add items to cart and place orders
+- User authentication (signin/signup)
+- Order history to track your purchases
+- Clean UI with proper categories
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+**Frontend:**
+- React with TypeScript
+- Vite for faster builds
+- Recoil for state management
+- Tailwind CSS for styling
 
-## Expanding the ESLint configuration
+**Backend:**
+- Express.js
+- Prisma ORM
+- PostgreSQL database
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## How to run
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+1. Clone the repo
+```bash
+git clone <your-repo-url>
+cd FarmLand
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+2. Install dependencies
+```bash
+npm install
+cd backend && npm install
+```
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
+3. Setup database
+```bash
+cd backend
+npx prisma migrate dev
+```
+
+4. Run the app
+```bash
+# Terminal 1 - Frontend
+npm run dev
+
+# Terminal 2 - Backend
+cd backend
+npm run dev
+```
+
+Frontend runs on `http://localhost:5173`
+Backend runs on `http://localhost:3000`
+
+## Features
+
+- Shop page with all products
+- Cart management (add, remove, update quantity)
+- User authentication
+- Order placement and history
+- Responsive design
+
+## Future Plans
+
+- Payment integration
+- Admin dashboard for farmers
+- Rating and reviews
+- Delivery tracking
+
+---
+
+Made with ❤️ as a learning project
 import reactDom from 'eslint-plugin-react-dom'
 
 export default defineConfig([
