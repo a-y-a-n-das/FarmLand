@@ -13,6 +13,8 @@ interface ItemProps {
 function ItemCard(props: ItemProps) {
   const { imageUrl, title, price, rating = 0, inStock = true, quantity = 0, onAddToCart, onIncreaseQuantity, onDecreaseQuantity } = props;
 
+  
+
   return (
     <div className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden group cursor-pointer border border-gray-100">
       {/* Image Container */}

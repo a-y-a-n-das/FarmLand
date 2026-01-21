@@ -1,21 +1,36 @@
 import axios from "axios";
 import { atom, selector } from "recoil";
 
+interface Item {
+  id: number;
+  name: string;
+  price: number;
+  unit: string;
+  imageUrl: string;
+  category: string;
+  description: string;
+  inStock: boolean;
+  rating: number;
+  quantity: number;
+  itemId?: number;
+}
+
 export interface OrderItem {
   id: number;
   name: string;
   quantity: number;
-  price: number;
+  priceAtOrder: number;
+  item: Item;
   image: string;
 }
 
 export interface Order {
   id: number;
-  amount: number;
-  items: OrderItem[];
+  orderItems: OrderItem[];
   isDelivered: boolean;
-  date: string; // Delivery date if delivered, order date if not
-  orderDate: string;
+  deliveryDate: string; // Delivery date if delivered, order date if not
+  createdAt: string;
+  totalAmount: number;
 }
 
 

@@ -7,12 +7,13 @@ async function createOrderInDb(
   price: number[],
 ) {
   try {
-    
+    const totalAmount: number = price.reduce((acc, curr, index) => acc + (curr * (quantity[index] ?? 1)), 0);
     const order = await prisma.order.create({
       data: {
         user: {
           connect: { id: userId }
         },
+        totalAmount: totalAmount,
         orderItems: {
           create: itemId.map((id, index) => ({
             item: {
@@ -31,6 +32,12 @@ async function createOrderInDb(
         }
       }
     });
+
+    await prisma.cartItem.deleteMany({
+      where: {
+        userId: userId
+      }
+    }); 
     
     return order;
   } catch (error) {

@@ -43,6 +43,7 @@ model Order{
   createdAt DateTime @default(now())
   deliveryDate DateTime?
   user      User     @relation(fields: [userId], references: [id])
+  totalAmount Int
   orderItems OrderItem[]
 }
 

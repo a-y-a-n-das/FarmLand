@@ -10,7 +10,7 @@ export interface Item{
     name: string;
     price: number;
     unit: string;
-    image: string;
+    imageUrl: string;
     category: string;
     description: string;
     inStock: boolean;
@@ -147,7 +147,7 @@ export default function ItemsSection() {
         {sortedItems.map(item => (
           <ItemCard 
             key={item.id}
-            imageUrl={item.image}
+            imageUrl={item.imageUrl}
             title={item.name}
             price={item.price}
             rating={item.rating}

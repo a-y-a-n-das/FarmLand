@@ -16,18 +16,24 @@ export const CartAtom = atom<Item[]>({
   key: "CartItemsAtom",
   default: selector({
     key: "CartItemsAtom/Default",
-    get: () => {
-      const fetchCart = async () => {
-        const response = await axios.get("/user/cart", {
+    get: async() => {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) return [];
+
+        const { data } = await axios.get("/user/cart", {
           headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + localStorage.getItem("token"),
+            Authorization: `Bearer ${token}`,
           },
         });
-        if (response.status === 200) return response.data.cartItems;
-        else return [];
-      };
-      return fetchCart();
+
+        return data.cartItems ?? [];
+      } catch (err) {
+        console.error("Failed to fetch cart", err);
+        localStorage.removeItem("token");
+        return [];
+
+      }
     },
   }),
 });

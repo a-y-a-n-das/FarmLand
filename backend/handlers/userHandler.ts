@@ -37,7 +37,7 @@ export const createOrder = async (req: Request, res: Response) => {
 
 
   try {
-    const order = await createOrderInDb(userId, itemId, quantity, price);
+    const order = await createOrderInDb(userId, itemId, quantity, price, );
     res.status(201).json({ message: "Order created successfully", order });
   } catch (error) {
     console.error('Order creation error:', error);
