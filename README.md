@@ -2,6 +2,14 @@
 
 A simple e-commerce webapp where you can buy fresh produce directly from farms. Made this for learning full-stack development with React and Express.
 
+## 🚀 Live Demo
+
+**Live Site:** [https://farm-land-u2xz.vercel.app/](https://farm-land-u2xz.vercel.app/)
+
+**Demo User Credentials:**
+- Email: `demo123@gmail.com`
+- Password: `demo123`
+
 ## What it does
 
 - Browse different farm products with search and filters
