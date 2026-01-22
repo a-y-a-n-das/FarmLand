@@ -1,11 +1,11 @@
-import { addItemToCartInDb } from "../database/addItemToCart.ts";
-import { createOrderInDb } from "../database/createOrder.ts";
-import { getCartItemsFromDb } from "../database/getCartItems.ts";
-import { getUser } from "../database/getUser.ts";
-import { getOrderHistoryFromDb } from "../database/orderHistory.ts";
+import { addItemToCartInDb } from "../database/addItemToCart";
+import { createOrderInDb } from "../database/createOrder";
+import { getCartItemsFromDb } from "../database/getCartItems";
+import { getUser } from "../database/getUser";
+import { getOrderHistoryFromDb } from "../database/orderHistory";
 import type { Request, Response } from "express";
-import { incrementQuantityCartInDb } from "../database/incrementQuantityCart.ts.ts";
-import { decrementQuantityInCartInDb } from "../database/decrementQuantityInCart.ts";
+import { incrementQuantityCartInDb } from "../database/incrementQuantityCart";
+import { decrementQuantityInCartInDb } from "../database/decrementQuantityInCart";
 
 export const getCartItems = async (req: Request, res: Response) => {
   const userId = req.userId!; 

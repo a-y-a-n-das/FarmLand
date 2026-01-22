@@ -1,8 +1,8 @@
 import express from "express";
 import cors from "cors";
-import { auth } from "./routes/auth.ts";
-import { userRoutes } from "./routes/userRoutes.ts";
-import { publicRoutes } from "./routes/publicRoutes.ts";
+import { auth } from "./routes/auth";
+import { userRoutes } from "./routes/userRoutes";
+import { publicRoutes } from "./routes/publicRoutes";
 
 
 
