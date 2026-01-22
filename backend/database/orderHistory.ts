@@ -1,4 +1,4 @@
-import {prisma} from './prisma.ts';
+import {prisma} from './prisma.js';
 
 async function getOrderHistoryFromDb(userId: number) {
     const orderHistory = await prisma.order.findMany({

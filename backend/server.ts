@@ -1,8 +1,8 @@
 import express from "express";
 import cors from "cors";
-import { auth } from "./routes/auth";
-import { userRoutes } from "./routes/userRoutes";
-import { publicRoutes } from "./routes/publicRoutes";
+import { auth } from "./routes/auth.js";
+import { userRoutes } from "./routes/userRoutes.js";
+import { publicRoutes } from "./routes/publicRoutes.js";
 
 
 

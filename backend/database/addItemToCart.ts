@@ -1,4 +1,4 @@
-import {prisma} from './prisma.ts'
+import {prisma} from './prisma.js'
 
 async function addItemToCartInDb(userId: number, itemId: number, quantity: number) { 
     const cartItem = await prisma.cartItem.upsert({

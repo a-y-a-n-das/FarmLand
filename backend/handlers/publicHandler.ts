@@ -1,8 +1,8 @@
 import type { Request, Response } from "express";
-import { getItemsFromDb } from "../database/getItems";
-import { getUserByEmail } from "../database/getUser";
+import { getItemsFromDb } from "../database/getItems.js";
+import { getUserByEmail } from "../database/getUser.js";
 import jwt from "jsonwebtoken";
-import { createUser } from "../database/createUser";
+import { createUser } from "../database/createUser.js";
 import bcrypt from "bcrypt";
 
 const secret: string = process.env.JWT_SECRET || "your_jwt_secret_key";

@@ -1,4 +1,4 @@
-import { prisma } from "./prisma.ts";
+import { prisma } from "./prisma.js";
 
 async function getCartItemsFromDb(userId: number) {
     const cartItems = await prisma.cartItem.findMany({

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getItems, getToken } from "../handlers/publicHandler";
+import { getItems, getToken } from "../handlers/publicHandler.js";
 const router = Router();
 
 router.get("/items", getItems);

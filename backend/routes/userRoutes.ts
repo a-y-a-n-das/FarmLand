@@ -1,5 +1,5 @@
 import { Router } from "express";
-import {  addItemToCart, createOrder, decrementQuantityCart, getCartItems, getOrderHistory, getUserProfile, incrementQuantityCart } from "../handlers/userHandler";
+import {  addItemToCart, createOrder, decrementQuantityCart, getCartItems, getOrderHistory, getUserProfile, incrementQuantityCart } from "../handlers/userHandler.js";
 const router = Router();
 
 router.get("/cart", getCartItems);

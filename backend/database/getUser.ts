@@ -1,4 +1,4 @@
-import { prisma }  from '../generated/prisma.ts';
+import { prisma }  from '../generated/prisma.js';
 
 
 
