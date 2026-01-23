@@ -112,6 +112,15 @@ function Signin() {
             </div>
           </div>
 
+          <div>
+            Demo login credentials:
+            <ul className="list-disc list-inside text-gray-500">
+              <li>Email: demo123@gmail.com</li>
+              <li>Password: demo123</li>
+            </ul>
+            <br></br>
+          </div>
+
           {/* Email/Password Form */}
           <form onSubmit={handleSubmit} className="space-y-3">
             {/* Email Input */}

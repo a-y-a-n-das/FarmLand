@@ -22,6 +22,7 @@ function ItemCard(props: ItemProps) {
         <img 
           src={imageUrl} 
           alt={title} 
+          loading="lazy"
           className="block w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
           style={{ display: 'block' }}
         />

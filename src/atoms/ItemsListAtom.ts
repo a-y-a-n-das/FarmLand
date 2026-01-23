@@ -16,13 +16,13 @@ interface Item {
     itemId?: number;
 }
 
-const token = String(localStorage.getItem('token'));
-
 const ItemsListAtom = atom<Item[]>({
   key: "ItemsListAtom",
   default: selector({
     key: "ItemsListAtom/Default",
     get: async () => {
+      const token = String(localStorage.getItem('token'));
+      
       async function getItems() {
         if(!token || token === "null") {
         const responseAllItems = await axios.get("/items");
