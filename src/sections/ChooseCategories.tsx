@@ -1,4 +1,3 @@
-import React from 'react';
 import vegetablesImg from '../assets/vegetables.png';
 import dairyImg from '../assets/dairy.png';
 import meatImg from '../assets/meat.png';

@@ -12,7 +12,7 @@ interface CartItem {
   name: string;
   price: number;
   unit: string;
-  image: string;
+  imageUrl: string;
   category: string;
   description: string;
   inStock: boolean;
@@ -219,7 +219,7 @@ function Cart() {
                     {/* Item Image */}
                     <div className="flex-shrink-0">
                       <img
-                        src={i.item.image}
+                        src={i.item.imageUrl}
                         alt={i.item.name}
                         className="w-32 h-32 object-cover rounded-xl"
                       />
