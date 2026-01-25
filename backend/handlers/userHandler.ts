@@ -120,12 +120,10 @@ export const decrementQuantityCart = async (req: Request, res: Response) => {
 
 export const logoutUser = async (req: Request, res: Response) => {
   try {
-    // Here you can implement any server-side logout logic if needed
-    res.clearCookie("token", {
+    res.clearCookie("auth_token", {
       httpOnly: true,
       secure: true,
       sameSite: "none",
-      domain: "production-backend.duckdns.org",
       path: "/",
     });
     res.status(200).json({ message: "User logged out successfully" });
