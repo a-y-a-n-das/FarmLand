@@ -106,4 +106,16 @@ export const decrementQuantityCart = async (req: Request, res: Response) => {
 };
 
 
-
+export const logoutUser = async (req: Request, res: Response) => {
+    try {
+        // Here you can implement any server-side logout logic if needed
+        res.clearCookie("token", {
+            httpOnly: true,
+            secure: true,
+            sameSite: "none",
+        });
+        res.status(200).json({ message: "User logged out successfully" });
+    } catch (error) {
+        res.status(500).json({ message: "Error logging out user", error });
+    }
+};  

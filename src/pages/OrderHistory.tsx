@@ -13,6 +13,7 @@ import {
 import { useState } from "react";
 import Footer from "../sections/Footer";
 import { CartAtom, SignInAtom } from "../atoms/UserAtom";
+import axios from "axios";
 
 function OrderHistory() {
   const orders = useRecoilValue(OrderHistoryAtom);
@@ -40,8 +41,15 @@ function OrderHistory() {
 
   const isExpanded = (orderId: number) => expandedOrders.includes(orderId);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     localStorage.removeItem("token");
+    await axios.post("/user/logout", {}, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+      withCredentials: true,
+    }); 
     window.location.href = "/";
   };
 
