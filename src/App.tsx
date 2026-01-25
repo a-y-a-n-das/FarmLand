@@ -11,7 +11,6 @@ import Signin from "./pages/Signin";
 import axios from "axios";
 import { useEffect } from "react";
 import { useSetRecoilState } from "recoil";
-import { Analytics } from "@vercel/analytics/next"
 
 
 import { CartItemCountAtom, SignInAtom } from "./atoms/UserAtom";
@@ -79,7 +78,6 @@ function App() {
           <Route path="/signin" element={<Signin />} />
         </Routes>
       </BrowserRouter>
-      <Analytics /> 
     </>
   );
 }
