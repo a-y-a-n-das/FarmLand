@@ -84,8 +84,8 @@ export async function gauthCallback(req: Request, res: Response) {
           }
           res.cookie("auth_token", token, {
             httpOnly: true,
-            secure: false, 
-            sameSite: "lax",
+            secure: true, 
+            sameSite: "none",
             maxAge: 24 * 60 * 60 * 1000, 
           });
           res.redirect(process.env.FRONTEND_URL || "http://localhost:5173/shop");
@@ -111,8 +111,8 @@ export async function gauthCallback(req: Request, res: Response) {
           
           res.cookie("auth_token", token, {
             httpOnly: true,
-            secure: false, 
-            sameSite: "lax",
+            secure: true, 
+            sameSite: "none",
             maxAge: 24 * 60 * 60 * 1000, 
           });
           res.redirect(process.env.FRONTEND_URL || "http://localhost:5173/shop");
