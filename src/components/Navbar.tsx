@@ -14,13 +14,16 @@ function Navbar(props: props) {
   const [isScrolled, setIsScrolled] = useState(false);
   
   const itemsList = useRecoilValue(ItemsListAtom);
+  console.log("Items List in Navbar:", itemsList);
   let cartItems: number = 0
 
   const token = String(localStorage.getItem('token'));
+  console.log("Token in Navbar:", token);
   if(!token || token === "null"){
     cartItems = 0
   }
-  else{
+
+  if(token) {
     itemsList.forEach(i=> {
       const u: number[]= []
       if(!u.includes(i.id) && i.quantity != 0 ){
@@ -29,9 +32,6 @@ function Navbar(props: props) {
       }
     });
   }
-
-  
-
 
   const isSignIn = props.isSignedIn || false;
   const scroll = window.scrollY;

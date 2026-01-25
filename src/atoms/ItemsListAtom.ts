@@ -41,6 +41,7 @@ const ItemsListAtom = atom<Item[]>({
             return responseAllItems.data.items;
           }
 
+          console.log("User Items:", responseUserItems.data);
           const items = responseAllItems.data.items.map((item: Item) => {
             const userItem = responseUserItems.data.cartItems.find((cartItem: Item) => cartItem.itemId === item.id);
             if(userItem) {

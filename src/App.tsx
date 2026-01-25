@@ -28,6 +28,15 @@ function App() {
           !localStorage.getItem("token") ||
           localStorage.getItem("token") === "undefined"
         ) {
+
+          const response = await axios.get("/me", {
+            withCredentials: true,});
+
+        if (response.status == 200) {
+          setIsSignedIn(true);
+          localStorage.setItem("token", response.data.token); 
+          return;
+        }  
           setIsSignedIn(false);
           return;
         }
@@ -36,7 +45,7 @@ function App() {
             "Content-Type": "application/json",
             Authorization: "Bearer " + localStorage.getItem("token"),
           },
-        });
+        }, );
         if (response.status === 200) {
           setIsSignedIn(true);
           setCartItems(response.data.user?.cartItems.length);
