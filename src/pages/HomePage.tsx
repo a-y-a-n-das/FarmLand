@@ -6,7 +6,7 @@ import HomepageEnding from "../sections/HomepageEnding";
 import HomeWelcome from "../sections/HomeWelcome";
 import Testimonial from "../sections/Testimonial";
 import { CartItemCountAtom, SignInAtom } from "../atoms/UserAtom";
-import { Analytics } from "@vercel/analytics/next"
+import { Analytics } from "@vercel/analytics/react";
 
 
 
