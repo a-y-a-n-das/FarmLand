@@ -3,7 +3,7 @@ import cors from "cors";
 import { auth } from "./routes/auth.js";
 import { userRoutes } from "./routes/userRoutes.js";
 import { publicRoutes } from "./routes/publicRoutes.js";
-
+import cookieParser from "cookie-parser";
 
 
 const app = express()
@@ -17,6 +17,7 @@ app.use(cors({
 }))
 app.use(express.json())
 
+app.use(cookieParser());
 app.use("/api/user", auth, userRoutes)
 app.use("/api/", publicRoutes )
 
