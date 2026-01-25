@@ -42,15 +42,22 @@ function OrderHistory() {
   const isExpanded = (orderId: number) => expandedOrders.includes(orderId);
 
   const handleLogout = async () => {
+      try{
+
+        await axios.post("/user/logout", {}, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+          withCredentials: true,
+        }); 
+      }catch(error){
+        console.error("Logout failed:", error);
+      }finally{
+
     localStorage.removeItem("token");
-    await axios.post("/user/logout", {}, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + localStorage.getItem("token"),
-      },
-      withCredentials: true,
-    }); 
     window.location.href = "/";
+      }
   };
 
   return (
