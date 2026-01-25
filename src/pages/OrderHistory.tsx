@@ -21,7 +21,6 @@ function OrderHistory() {
   const cartItemCount = useRecoilValue(CartAtom).length;
   const isSignedIn = useRecoilValue(SignInAtom);
 
-
   const toggleOrderExpansion = (orderId: number) => {
     setExpandedOrders((prev) =>
       prev.includes(orderId)
@@ -42,22 +41,28 @@ function OrderHistory() {
   const isExpanded = (orderId: number) => expandedOrders.includes(orderId);
 
   const handleLogout = async () => {
-      try{
-
-        await axios.post("/user/logout", {}, {
+    try {
+      const response = await axios.post(
+        "/user/logout",
+        {},
+        {
           headers: {
             "Content-Type": "application/json",
             Authorization: "Bearer " + localStorage.getItem("token"),
           },
           withCredentials: true,
-        }); 
-      }catch(error){
-        console.error("Logout failed:", error);
-      }finally{
+        },
+      );
 
-    localStorage.removeItem("token");
-    window.location.href = "/";
+      if (response.status === 200) {
+        console.log("Logout successful");
+        localStorage.removeItem("token");
       }
+    } catch (error) {
+      console.error("Logout failed:", error);
+    } finally {
+      window.location.href = "/";
+    }
   };
 
   return (
@@ -133,7 +138,9 @@ function OrderHistory() {
                       {order.isDelivered && (
                         <div className="flex items-center gap-2 text-sm text-gray-600 mt-1">
                           <CheckCircle size={16} className="text-green-600" />
-                          <span>Delivered: {formatDate(order.deliveryDate)}</span>
+                          <span>
+                            Delivered: {formatDate(order.deliveryDate)}
+                          </span>
                         </div>
                       )}
                     </div>
@@ -185,7 +192,6 @@ function OrderHistory() {
                   <div className="p-6 bg-gray-50">
                     <h3 className="text-lg font-semibold text-gray-900 mb-4">
                       Order Items {order.orderItems.length}
-                      
                     </h3>
                     <div className="space-y-3">
                       {order.orderItems.map((item) => (
