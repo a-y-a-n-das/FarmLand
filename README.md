@@ -14,7 +14,7 @@ A simple e-commerce webapp where you can buy fresh produce directly from farms. 
 
 - Browse different farm products with search and filters
 - Add items to cart and place orders
-- User authentication (signin/signup)
+- User authentication (signin/signup) Oauth 2.0 supported
 - Order history to track your purchases
 - Clean UI with proper categories
 
@@ -68,7 +68,7 @@ Backend runs on `http://localhost:3000`
 
 - Shop page with all products
 - Cart management (add, remove, update quantity)
-- User authentication
+- User authentication with Google/Email
 - Order placement and history
 - Responsive design
 
