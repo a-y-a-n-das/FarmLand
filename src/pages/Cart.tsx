@@ -15,6 +15,7 @@ function Cart() {
   const [subtotal, setSubtotal] = useState(0);
   const [tax, setTax] = useState(0);
   const [shipping, setShipping] = useState(0);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
     // Calculate totals
@@ -127,6 +128,7 @@ function Cart() {
   };
 
   const handleCheckout = () => {
+    setIsProcessing(true);
     const checkout = async () => {
       const token = localStorage.getItem("token");
       const itemIds = cartItems.map((i) => i.item.id);
@@ -147,6 +149,7 @@ function Cart() {
         },
       );
       if (response.status === 201) {
+        setIsProcessing(false);
         window.location.href = "/order-complete";
       }
     };
@@ -348,9 +351,11 @@ function Cart() {
                 {/* Checkout Button */}
                 <button
                   onClick={handleCheckout}
-                  className="w-full mt-6 bg-green-600 hover:bg-green-700 text-white py-4 rounded-full font-bold text-lg transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+                  className={`w-full mt-6 bg-green-600 hover:bg-green-700 text-white py-4 rounded-full font-bold text-lg transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl flex items-center justify-center gap-2 ${isProcessing ? "cursor-not-allowed opacity-70 disabled" : ""
+                    }`}
+                  disabled={isProcessing}
                 >
-                  Proceed to Checkout
+                  {(isProcessing) ? "Processing..." : "Proceed to Checkout"}
                   <ArrowRight size={24} />
                 </button>
 
