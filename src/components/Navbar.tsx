@@ -3,6 +3,7 @@ import logo from "../assets/farmlandLogo.svg";
 import { useState, useEffect } from "react";
 import { useRecoilValue } from "recoil";
 import ItemsListAtom from "../atoms/ItemsListAtom";
+import { CartAtom } from "../atoms/UserAtom";
 
 interface props {
   theme: string;
@@ -12,26 +13,18 @@ interface props {
 
 function Navbar(props: props) {
   const [isScrolled, setIsScrolled] = useState(false);
-  
-  const itemsList = useRecoilValue(ItemsListAtom);
-  console.log("Items List in Navbar:", itemsList);
+  const userCartItems = useRecoilValue(CartAtom).length;
   let cartItems: number = 0
 
   const token = String(localStorage.getItem('token'));
-  console.log("Token in Navbar:", token);
   if(!token || token === "null"){
     cartItems = 0
   }
 
-  if(token) {
-    itemsList.forEach(i=> {
-      const u: number[]= []
-      if(!u.includes(i.id) && i.quantity != 0 ){
-        cartItems+= 1
-        u.push(i.id)
-      }
-    });
+  if(token && token !== "null"){
+    cartItems = userCartItems;
   }
+
 
   const isSignIn = props.isSignedIn || false;
   const scroll = window.scrollY;
@@ -100,7 +93,7 @@ function Navbar(props: props) {
             <button
               className="relative mt-1 p-2 hover:opacity-80 transition cursor-pointer"
               onClick={() => {
-                navigate("/cart");
+                window.location.href = "/cart";
               }}
             >
               {/* Shopping Cart Icon */}

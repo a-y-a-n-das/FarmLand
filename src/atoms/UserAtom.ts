@@ -2,6 +2,15 @@ import { atom, selector } from "recoil";
 import axios from "axios";
 import type { Item } from "../sections/ItemsSection";
 
+export interface cartItem {
+    id: number;
+    userId: number;
+    itemId: number;
+    quantity: number;
+    item: Item;
+}
+
+
 export const SignInAtom = atom<boolean>({
   key: "SignInAtom",
   default: false,
@@ -12,7 +21,7 @@ export const CartItemCountAtom = atom<number>({
   default: 0,
 });
 
-export const CartAtom = atom<Item[]>({
+export const CartAtom = atom<cartItem[]>({
   key: "CartItemsAtom",
   default: selector({
     key: "CartItemsAtom/Default",

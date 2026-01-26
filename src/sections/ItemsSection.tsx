@@ -4,6 +4,7 @@ import ItemsListAtom from '../atoms/ItemsListAtom';
 import { sortByAtom } from '../atoms/SortByAtom';
 import { searchQueryAtom } from '../atoms/SearchQuery';
 import axios from 'axios';
+import { CartAtom, type cartItem } from '../atoms/UserAtom';
 
 export interface Item{
     id: number;
@@ -16,11 +17,13 @@ export interface Item{
     inStock: boolean;
     rating: number;
     quantity: number;
+    itemId?: number;
     item?: Item;
 }
 
 export default function ItemsSection() {
-    const [items, setItems] = useRecoilState(ItemsListAtom);
+    const items = useRecoilValue<Item[]>(ItemsListAtom);
+    const [userCartItems, setUserCartItems] = useRecoilState(CartAtom);
     const sortBy: string = useRecoilValue(sortByAtom);
     const searchQuery: string = useRecoilValue(searchQueryAtom);
     
@@ -64,17 +67,13 @@ export default function ItemsSection() {
           }
         });
       
-        setItems((prevItems: Item[]) => {
-          const updatedItems: Item[] = prevItems.map((item: Item) => {
-            if(item.id === itemId){
-              console.log("quantity", item.quantity);
-              return {...item, quantity: item.quantity + 1};
-            }
-            return item;
-          });
-          return updatedItems;
-        }); 
-
+        setUserCartItems((prevItems) => {
+          const item = items.find((itm: Item) => itm.id === itemId);
+          if(item){
+            return [...prevItems, {...item, quantity: 1, itemId: item.id}] as cartItem[];
+          }
+          return prevItems;
+        });
       if(response.status === 200){
         console.log("Item added to cart");
       } 
@@ -96,10 +95,10 @@ export default function ItemsSection() {
         });
 
       if(response.status === 200){
-        setItems((prevItems: Item[]) => {
-          return prevItems.map((item: Item) => {
+        setUserCartItems((prevItems: cartItem[]) => {
+          return prevItems.map((item: cartItem) => {
             if(item.id === itemId){
-              return {...item, quantity: item.quantity + 1};
+              return {...item, quantity: item.quantity + 1} as cartItem;
             }
             return item;
           });
@@ -123,8 +122,8 @@ export default function ItemsSection() {
         });
 
       if(response.status === 200){
-        setItems((prevItems: Item[]) => {
-          return prevItems.map((item: Item) => {
+        setUserCartItems((prevItems: cartItem[]) => {
+          return prevItems.map((item: cartItem) => {
             if(item.id === itemId){
               return {...item, quantity: item.quantity - 1};
             }
@@ -144,8 +143,12 @@ export default function ItemsSection() {
     <div className="items-section">
       {/* Item cards will go here */}
       <div className={`section-header text-center mb-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-4 sm:px-6 lg:px-8 grid`}>
-        {sortedItems.map(item => (
-          <ItemCard 
+        {sortedItems.map(item => {
+          const itemInCart: cartItem | undefined = userCartItems.find((cartItem: cartItem) => cartItem.id === item.id);
+          
+          return(
+
+            <ItemCard 
             key={item.id}
             imageUrl={item.imageUrl}
             title={item.name}
@@ -155,10 +158,10 @@ export default function ItemsSection() {
             onAddToCart={() => addToCart(item.id)}
             onIncreaseQuantity={() => increaseQuantity(item.id)}
             onDecreaseQuantity={() => decreaseQuantity(item.id)}
-            quantity={item.quantity}
-
-          />
-        ))}
+            quantity={itemInCart ? itemInCart.quantity : 0}
+            />
+          ) 
+})}
         </div>
     </div>
   );

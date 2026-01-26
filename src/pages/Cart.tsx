@@ -1,46 +1,40 @@
-import { useState, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { CartAtom, CartItemCountAtom } from "../atoms/UserAtom";
+import { CartAtom, CartItemCountAtom, type cartItem } from "../atoms/UserAtom";
 import Navbar from "../components/Navbar";
 import { Trash2, Plus, Minus, ShoppingBag, ArrowRight } from "lucide-react";
 import { SignInAtom } from "../atoms/UserAtom";
 import axios from "axios";
-import type { Item } from "../sections/ItemsSection";
-
-interface CartItem {
-  id: number;
-  name: string;
-  price: number;
-  unit: string;
-  imageUrl: string;
-  category: string;
-  description: string;
-  inStock: boolean;
-  rating: number;
-  quantity: number;
-  item: Item;
-}
 
 function Cart() {
   const cartItemCount = Number(useRecoilValue(CartItemCountAtom));
   const [promoCode, setPromoCode] = useState("");
   const isSignedIn = useRecoilValue(SignInAtom);
   const [cartItems, setCartItems] = useRecoilState(CartAtom);
+  const [total, setTotal] = useState(0);
+  const [subtotal, setSubtotal] = useState(0);
+  const [tax, setTax] = useState(0);
+  const [shipping, setShipping] = useState(0);
 
-  // Get cart items with their details
-  const cartItemsWithDetails: CartItem[] = useMemo(
-    () => (cartItems as CartItem[]).filter((item) => item.quantity > 0),
-    [cartItems],
-  );
+  useEffect(() => {
+    // Calculate totals
 
-  // Calculate totals
-  const subtotal = cartItemsWithDetails.reduce(
-    (acc, i) => acc + i.item.price * i.quantity,
-    0,
-  );
-  const tax = subtotal * 0.1; // 10% tax
-  const shipping = subtotal > 50 ? 0 : 5.99;
-  const total = subtotal + tax + shipping;
+    const subtotal = cartItems.reduce(
+      (acc, i) => acc + i.item.price * i.quantity,
+      0,
+    );
+
+    const tax = subtotal * 0.1; // 10% tax
+    const shipping = subtotal > 50 ? 0 : 5.99;
+    function sumTotal() {
+      setSubtotal(subtotal);
+      setTax(tax);
+      setShipping(shipping);
+      setTotal(subtotal + tax + shipping);
+    }
+    sumTotal();
+  }, [cartItems, setTotal]);
+  
 
   const handleRemoveItem = (itemId: number, quantity: number) => {
     const decreaseQuantity = async (itemId: number, quantity: number) => {
@@ -105,43 +99,39 @@ function Cart() {
           },
         },
       );
-      
     };
 
     if (change > 0) {
       increaseQuantity(itemId);
-        setCartItems((prevItems) => {
-          const updatedItems = prevItems.map((item) => {
-            if (item.item?.id === itemId) {
-              return { ...item, quantity: item.quantity + 1};
-            }
-            return item;
-          });
-          return updatedItems;
+      setCartItems((prevItems) => {
+        const updatedItems = prevItems.map((item) => {
+          if (item.item?.id === itemId) {
+            return { ...item, quantity: item.quantity + 1 };
+          }
+          return item;
         });
-      
-      
+        return updatedItems;
+      });
     } else if (change < 0) {
       decreaseQuantity(itemId);
-        setCartItems((prevItems) => {
-          const updatedItems = prevItems.map((item) => {
-            if (item.item?.id === itemId) {
-              return { ...item, quantity: item.quantity - 1 };
-            }
-            return item;
-          });
-          return updatedItems;
+      setCartItems((prevItems) => {
+        const updatedItems = prevItems.map((item) => {
+          if (item.item?.id === itemId) {
+            return { ...item, quantity: item.quantity - 1 };
+          }
+          return item;
         });
-      
+        return updatedItems;
+      });
     }
   };
 
   const handleCheckout = () => {
     const checkout = async () => {
       const token = localStorage.getItem("token");
-      const itemIds = cartItemsWithDetails.map((i) => i.item.id);
-      const quantities = cartItemsWithDetails.map((i) => i.quantity);
-      const prices = cartItemsWithDetails.map((i) => i.item.price);
+      const itemIds = cartItems.map((i) => i.item.id);
+      const quantities = cartItems.map((i) => i.quantity);
+      const prices = cartItems.map((i) => i.item.price);
       const response = await axios.post(
         "/user/order",
         {
@@ -188,7 +178,7 @@ function Cart() {
           </p>
         </div>
 
-        {cartItemsWithDetails.length === 0 ? (
+        {cartItems.length === 0 ? (
           // Empty Cart State
           <div className="text-center py-16">
             <ShoppingBag className="mx-auto text-gray-300" size={80} />
@@ -210,7 +200,7 @@ function Cart() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Cart Items */}
             <div className="lg:col-span-2 space-y-4">
-              {cartItemsWithDetails.map((i) => (
+              {cartItems.map((i: cartItem) => (
                 <div
                   key={i.item.id}
                   className="bg-white rounded-2xl shadow-md p-6 hover:shadow-lg transition-shadow duration-300"
