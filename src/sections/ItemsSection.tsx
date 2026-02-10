@@ -1,5 +1,5 @@
 import ItemCard from '../components/ItemCard';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useRecoilValueLoadable } from 'recoil';
 import ItemsListAtom from '../atoms/ItemsListAtom';
 import { sortByAtom } from '../atoms/SortByAtom';
 import { searchQueryAtom } from '../atoms/SearchQuery';
@@ -23,6 +23,10 @@ export interface Item{
 
 export default function ItemsSection() {
     const items = useRecoilValue<Item[]>(ItemsListAtom);
+    const loadable = useRecoilValueLoadable<Item[]>(ItemsListAtom);
+    
+   
+
     const [userCartItems, setUserCartItems] = useRecoilState(CartAtom);
     const sortBy: string = useRecoilValue(sortByAtom);
     const searchQuery: string = useRecoilValue(searchQueryAtom);
@@ -137,6 +141,10 @@ export default function ItemsSection() {
 
     };
 
+
+  if(loadable.state === 'loading'){
+    return <div className="text-center py-10">Loading items...</div>;
+  }
     
 
   return (
